@@ -5,13 +5,14 @@ SRC=testmem64.c
 BIN=testmem64
 
 testmem64:
-	$(CC) $(SRC) -o $(BIN)
+	mkdir ./build
+	$(CC) $(SRC) -o ./build/$(BIN)
 
 clean:
-	rm $(BIN)
+	rm -r ./build
 
 install:
-	cp $(BIN) /usr/bin/
+	cp ./build/$(BIN) /usr/bin/
 
 uninstall:
 	rm /usr/bin/$(BIN)
