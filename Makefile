@@ -4,10 +4,13 @@ CC=gcc $(CFLAGS)
 SRC=testmem64.c
 BIN=testmem64
 
-testmem64:
+build:
 	mkdir ./build
 	$(CC) $(SRC) -o ./build/$(BIN)
 
+run:
+	./testmem64 
+	
 clean:
 	rm -r ./build
 
