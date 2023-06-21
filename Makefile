@@ -1,5 +1,5 @@
 CFLAGS=-march=native -O2 -fstack-protector -v -Werror
-CC=gcc $(CFLAGS)
+CC=gcc
 
 SRC=testmem64.c testmem64.h
 BIN=testmem64
@@ -8,7 +8,7 @@ BIN=testmem64
 
 build:
 	mkdir -p ./build
-	$(CC) $(SRC) -o ./build/$(BIN)
+	$(CC) $(CFLAGS) $(SRC) -o ./build/$(BIN)
 
 run:
 	./build/$(BIN)
