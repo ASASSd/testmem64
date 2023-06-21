@@ -1,4 +1,4 @@
-CFLAGS=-march=native -O2 -fstack-protector -v
+CFLAGS=-march=native -O2 -fstack-protector -v -Werror
 CC=gcc $(CFLAGS)
 
 SRC=testmem64.c
