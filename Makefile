@@ -9,7 +9,7 @@ build:
 	$(CC) $(SRC) -o ./build/$(BIN)
 
 run:
-	./testmem64 
+	./build/$(BIN)
 	
 clean:
 	rm -r ./build
