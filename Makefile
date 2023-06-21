@@ -1,32 +1,45 @@
-CFLAGS=-march=native -O2 -fstack-protector -v -Werror
+CFLAGS=-march=native -O2 -fstack-protector -Werror
 CC=gcc
 
-SRC=testmem64.c testmem64.h
+SRC=testmem64.c
 BIN=testmem64
+
+BUILD_DIR=./build
+INSTALL_PATH=/usr/bin
+DISASM_DIR=./disasm
+DISASM_FILE=$(BIN)_disasm.txt
 
 .PHONY: build run clean install uninstall strip disasm
 
 build:
-	mkdir -p ./build
-	$(CC) $(CFLAGS) $(SRC) -o ./build/$(BIN)
+	@printf "\tMKDIR\t$(BUILD_DIR)\n\r"
+	@mkdir -p $(BUILD_DIR)
+	@printf "\tCC\t$(SRC)\n\r"
+	@$(CC) $(CFLAGS) $(SRC) -o $(BUILD_DIR)/$(BIN)
 
 run:
-	./build/$(BIN)
+	@printf "\tRUN\n\r"
+	@$(BUILD_DIR)/$(BIN)
 	
 clean:
-	rm -rf ./build ./disasm
-
+	@printf "\tCLEAN\t$(BUILD_DIR) $(DISASM_DIR)\n\r"
+	@rm -rf $(BUILD_DIR) $(DISASM_DIR)
 strip:
-	strip ./build/$(BIN)
+	@printf "\tSTRIP\t./build/$(BIN)\n\r"
+	@strip $(BUILD_DIR)/$(BIN)
 
 install:
-	cp ./build/$(BIN) /usr/bin/
+	@printf "\tINSTALL\t$(INSTALL_PATH)\n\r"
+	@cp $(BUILD_DIR)/$(BIN) $(INSTALL_PATH)
 
 uninstall:
-	rm /usr/bin/$(BIN)
+	@printf "\tUNINSTALL\t$(INSTALL_PATH)\n\r"
+	@rm $(INSTALL_PATH)/$(BIN)
 
 disasm:
-	mkdir -p ./disasm
-	touch ./disasm/disasm_report.txt
-	readelf -W -a ./build/$(BIN) > ./disasm/disasm_report.txt
-	objdump -d -S ./build/$(BIN) >> ./disasm/disasm_report.txt
+	@printf "\tMKDIR\t$(DISASM_DIR)\n\r"
+	@mkdir -p $(DISASM_DIR)
+	@touch $(DISASM_DIR)/$(DISASM_FILE)
+	@printf "\tDISASM\t$(DISASM_FILE)\n\r"
+	@readelf -W -a $(BUILD_DIR)/$(BIN) > $(DISASM_DIR)/$(DISASM_FILE)
+	@objdump -d -S $(BUILD_DIR)/$(BIN) >> $(DISASM_DIR)/$(DISASM_FILE)
