@@ -41,5 +41,6 @@ disasm:
 	@mkdir -p $(DISASM_DIR)
 	@touch $(DISASM_DIR)/$(DISASM_FILE)
 	@printf "\tDISASM\t$(DISASM_FILE)\n\r"
-	@readelf -W -a $(BUILD_DIR)/$(BIN) > $(DISASM_DIR)/$(DISASM_FILE)
+	@file $(BUILD_DIR)/$(BIN) > $(DISASM_DIR)/$(DISASM_FILE)
+	@readelf -W -a $(BUILD_DIR)/$(BIN) >> $(DISASM_DIR)/$(DISASM_FILE)
 	@objdump -d -S $(BUILD_DIR)/$(BIN) >> $(DISASM_DIR)/$(DISASM_FILE)
