@@ -34,7 +34,7 @@ install:
 
 uninstall:
 	@printf "\tUNINSTALL\t$(INSTALL_PATH)\n\r"
-	@rm $(INSTALL_PATH)/$(BIN)
+	@rm -f $(INSTALL_PATH)/$(BIN)
 
 disasm:
 	@printf "\tMKDIR\t$(DISASM_DIR)\n\r"
