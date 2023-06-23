@@ -1,5 +1,5 @@
 # testmem64
-Tiny memory testing utility, that writes selected pattern to allocateed memory and then verifies it.
+Tiny memory testing utility, that writes selected pattern to allocated memory and then verifies it.
 
 Build:
 -
