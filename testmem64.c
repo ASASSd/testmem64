@@ -7,7 +7,7 @@
 #include "testmem64.h"
 
 void test_memory(char* mem, int size, char pattern) {
-    for(int i = 0; i < size; i++) {
+    for (int i = 0; i < size; i++) {
         *(mem+i) = pattern;
     }
 
@@ -28,9 +28,10 @@ int main(int argc, char* argv[]) {
     int pgsize = DEFAULT_PGSIZE;
     char pattern = DEFAULT_PATTERN;
     bool verbose = DEFAULT_VERBOSE;
+    bool stress_mode = DEFAULT_STRESSMODE;
 
     int opt;
-    while ((opt = getopt(argc, argv, "m:i:p:c:vh")) != -1) {
+    while ((opt = getopt(argc, argv, "m:i:p:c:vhs")) != -1) {
         switch (opt) {
             case 'm':
                 memsize = atoi(optarg);
@@ -40,13 +41,16 @@ int main(int argc, char* argv[]) {
                 break;
             case 'p':
                 pgsize = atoi(optarg);
-                break;    
+                break;
+            case 'v':
+                verbose = true;
+                break;
             case 'h':
                 printf(USAGE_OUT, argv[0]);
                 return 0;
-            case 'v':
-                verbose = true;
-                break; 
+            case 's':
+                stress_mode = true;
+                break;
             case 'c':
                 pattern = *optarg;
                 break;
@@ -58,21 +62,21 @@ int main(int argc, char* argv[]) {
 
     printf("Allocating %d testing pages, %d bytes per page\n\r", memsize, pgsize);
     unsigned char* ptrs[memsize];
-    for(int n = 0; n < memsize; n++) {
+    for (int n = 0; n < memsize; n++) {
         unsigned char* ptr = (unsigned char*) malloc(pgsize);
 
-        if(ptr == 0x0) {
+        if (ptr == 0x0) {
             printf("Error: null pointer returned (Out of heap?)\n\r");
-            for(int p = 0; p <= n; p++) {
+            for (int p = 0; p <= n; p++) {
                 free(ptrs[p]);
             }
             return -ENOMEM;
         }
-        if(verbose) {
+        if (verbose) {
             printf("\rAllocating memory at %p (%d page)... ", (void*) ptr, n);
         }
 
-        for(int i = 0; i < pgsize; i++) {
+        for (int i = 0; i < pgsize; i++) {
                 *(ptr+i) = 0x0;
         }
         ptrs[n] = ptr;        
@@ -80,28 +84,38 @@ int main(int argc, char* argv[]) {
 
     printf("Memory successfully allocated (%d pages).\n\r", memsize);
 
-    if(pattern != DEFAULT_PATTERN) {
+    if (pattern != DEFAULT_PATTERN) {
         printf("Using record pattern '%c'\n\r", pattern);
     } else {
         printf("Using default record pattern\n\r");
     }
 
-    for(int n = 0; n < memsize; n++) {
+    if (stress_mode) {
+        printf("Stress mode enabled - will run until CTRL+C\n\r");
+    }
+
+    int pass = 0;
+    for (int n = 0; n < memsize; n++) {
         unsigned char* ptr = ptrs[n];
         printf("Testing memory at %p (%d page)... ", (void*) ptr, n);
-        for(int iter = 0; iter < iterations; iter++) {
+        for (int iter = 0; iter < iterations; iter++) {
             test_memory((char*)ptr, pgsize, pattern);
+        }
+        if (n == memsize-1 && stress_mode) {
+            printf("\n\rPass %d: passed!\n\r", pass);
+            n = 0;
+            pass++;
         }
     }
     
     printf("\n\rTest completed!\n\r");
 
-    if(!verbose) {
+    if (!verbose) {
         printf("Freeing allocated memory... ");
     }
 
-    for(int n = 0; n < memsize; n++) {
-        if(verbose) {
+    for (int n = 0; n < memsize; n++) {
+        if (verbose) {
             printf("\rFreeing allocated memory at %p (%d page)... ", (void*) ptrs[n], n);
         }
         free(ptrs[n]);
