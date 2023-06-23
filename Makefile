@@ -24,6 +24,7 @@ run:
 clean:
 	@printf "\tCLEAN\t$(BUILD_DIR) $(DISASM_DIR)\n\r"
 	@rm -rf $(BUILD_DIR) $(DISASM_DIR)
+
 strip:
 	@printf "\tSTRIP\t./build/$(BIN)\n\r"
 	@strip $(BUILD_DIR)/$(BIN)
