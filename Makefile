@@ -1,5 +1,5 @@
 CFLAGS=-march=native -Os -fstack-protector -Werror
-CC=clang
+CC=gcc
 
 SRC=testmem64.c
 BIN=testmem64
