@@ -1,5 +1,5 @@
-CFLAGS=-march=native -O2 -fstack-protector -Werror
-CC=gcc
+CFLAGS=-march=native -Os -fstack-protector -Werror
+CC=clang
 
 SRC=testmem64.c
 BIN=testmem64
@@ -18,8 +18,8 @@ build:
 	@$(CC) $(CFLAGS) $(SRC) -o $(BUILD_DIR)/$(BIN)
 
 run:
-	@printf "\tRUN\n\r"
-	@$(BUILD_DIR)/$(BIN)
+	@printf "\tRUN\tARGS=\"$(ARGS)\"\n\r"
+	@$(BUILD_DIR)/$(BIN) $(ARGS)
 	
 clean:
 	@printf "\tCLEAN\t$(BUILD_DIR) $(DISASM_DIR)\n\r"
